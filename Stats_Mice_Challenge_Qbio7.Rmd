@@ -1,0 +1,36 @@
+---
+title: "Stats_Challenge_Mice_QBio7"
+author: "The Mice Team"
+date: "13/09/2021"
+output: html_document
+---
+
+```{r}
+
+library(dplyr)
+#read the Dataset sheet into “R”. The dataset will be called "data".
+data <- read.csv("https://covid.ourworldindata.org/data/owid-covid-data.csv",
+     na.strings = "",header=T)
+
+
+res <- NULL
+for (i in 1:length(unique(data$date))){
+  data1 <- data[which((data$date==unique(data$date)[i])&(data$continent=="Europe")),]
+  data1 <- data1 %>% select("iso_code","date","total_vaccinations", "new_cases")
+  if (sum(rowSums(!is.na(data1[,3:4]))==2)>=10){
+  res <- rbind(res, c(unique(data$date)[i],
+      cor.test(data1[,3],data1[,4])$estimate,
+      cor.test(data1[,3],data1[,4])$p.value))
+}}
+
+res[which((as.numeric(res[,2])>0)& (as.numeric(res[,3])<=0.05)),]
+
+
+## Our subjective conclusion is that there is a positive correlation between total vaccinations and new cases. Using Europe as a test sample, we find evidence that there is a statistically significant relationships between getting vaccinated and a rise in new covid cases. This just goes to show that covid vaccinations are not effective and get you sick. It's BIG PHARMA MAKING US SICK!!!!
+
+
+##DISCLAIMER: Obviosuly, this is not true. These results are obviosuly based on a sub-sample, and there are various confounding factors such as vaccine efficacy rates, social distancing, mask wearing etc, that are influencing results. 
+
+```
+
+
